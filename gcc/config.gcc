@@ -1784,6 +1784,9 @@ lm32-*-uclinux*)
         tm_file="dbxelf.h elfos.h ${tm_file} gnu-user.h linux.h lm32/uclinux-elf.h"
 	tmake_file="${tmake_file} lm32/t-lm32"
         ;;
+m32r-*-coff*)
+	tm_file="dbxcoff.h coffos.h newlib-stdint.h ${tm_file}"
+ 	;;
 m32r-*-elf*)
 	tm_file="dbxelf.h elfos.h newlib-stdint.h ${tm_file}"
  	;;

@@ -130,6 +130,13 @@ static const struct attribute_spec m32r_attribute_table[] =
 #undef  TARGET_ASM_ALIGNED_SI_OP
 #define TARGET_ASM_ALIGNED_SI_OP "\t.word\t"
 
+#ifdef USING_COFFOS_H
+#undef TARGET_ASM_UNALIGNED_HI_OP
+#undef TARGET_ASM_UNALIGNED_SI_OP
+#define TARGET_ASM_UNALIGNED_HI_OP "\t.hword\t"
+#define TARGET_ASM_UNALIGNED_SI_OP "\t.word\t"
+#endif
+
 #undef  TARGET_PRINT_OPERAND
 #define TARGET_PRINT_OPERAND m32r_print_operand
 #undef  TARGET_PRINT_OPERAND_ADDRESS

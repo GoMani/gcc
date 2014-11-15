@@ -33,6 +33,12 @@
 
 #undef ASM_APP_ON
 #undef ASM_APP_OFF
+
+#ifdef USING_COFFOS_H
+#define USING_COFFOS_P 1
+#else
+#define USING_COFFOS_P 0
+#endif
 
 
 /* M32R/X overrides.  */
@@ -886,7 +892,8 @@ L2:     .word STATIC
    macros differently.  */
 #define REGISTER_PREFIX		""
 #define LOCAL_LABEL_PREFIX	".L"
-#define USER_LABEL_PREFIX	""
+#undef USER_LABEL_PREFIX 
+#define USER_LABEL_PREFIX	"" /* even for m32r-coff */
 #define IMMEDIATE_PREFIX	"#"
 
 /* This is how to output an element of a case-vector that is absolute.  */
@@ -963,7 +970,10 @@ L2:     .word STATIC
       else								\
 	fprintf ((FILE), "%s", COMMON_ASM_OP);				\
       assemble_name ((FILE), (NAME));					\
-      fprintf ((FILE), ",%u,%u\n", (int)(SIZE), (ALIGN) / BITS_PER_UNIT);\
+      if (USING_COFFOS_P)						\
+	fprintf ((FILE), ",%u\n", (int)(SIZE));				\
+      else								\
+	fprintf ((FILE), ",%u,%u\n", (int)(SIZE), (ALIGN) / BITS_PER_UNIT);\
     }									\
   while (0)
 
@@ -987,14 +997,24 @@ L2:     .word STATIC
 
 /* Generate DBX and DWARF debugging information.  */
 #define DBX_DEBUGGING_INFO    1
+#ifndef USING_COFFOS_H
 #define DWARF2_DEBUGGING_INFO 1
+#endif
 
 /* Use DWARF2 debugging info by default.  */
-#undef  PREFERRED_DEBUGGING_TYPE
+#undef PREFERRED_DEBUGGING_TYPE
+#ifdef USING_COFFOS_H
+#define PREFERRED_DEBUGGING_TYPE DBX_DEBUG
+#else
 #define PREFERRED_DEBUGGING_TYPE DWARF2_DEBUG
+#endif
 
 /* Turn off splitting of long stabs.  */
 #define DBX_CONTIN_LENGTH 0
+
+#ifdef USING_COFFOS_H
+#define SDB_DELIM "!"
+#endif
 
 /* Miscellaneous.  */
 

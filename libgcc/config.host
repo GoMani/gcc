@@ -726,15 +726,21 @@ lm32-*-uclinux*)
         extra_parts="$extra_parts crtbegin.o crtendS.o crtbeginT.o"
         tmake_file="lm32/t-lm32 lm32/t-uclinux t-libgcc-pic t-softfp-sfdf t-softfp"
 	;;	
+m32r*-*-coff*)
+	tmake_file="$tmake_file m32r/t-m32r t-fdpbit"
+	extra_parts="$extra_parts crtinit.o crtfini.o"
+ 	;;
 m32r-*-elf*)
-	tmake_file=t-fdpbit
+	tmake_file="$tmake_file m32r/t-m32r t-fdpbit"
+	extra_parts="$extra_parts crtinit.o crtfini.o"
  	;;
 m32r-*-rtems*)
 	tmake_file="$tmake_file m32r/t-m32r t-fdpbit"
 	extra_parts="$extra_parts crtinit.o crtfini.o"
 	;;
 m32rle-*-elf*)
-	tmake_file=t-fdpbit
+	tmake_file="$tmake_file m32r/t-m32r t-fdpbit"
+	extra_parts="$extra_parts crtinit.o crtfini.o"
 	;;
 m32r-*-linux*)
 	tmake_file="$tmake_file m32r/t-linux t-fdpbit"

@@ -6239,6 +6239,15 @@ default_coff_asm_named_section (const char *name, unsigned int flags,
   fprintf (asm_out_file, "\t.section\t%s,\"%s\"\n", name, flagchars);
 }
 
+/* GDB's coff reader doesn't support .text.startup.
+   It terminates GLOBAL_BLOCK prematurely, leaving out "main".  */
+
+section *
+default_coff_function_section (tree, enum node_frequency, bool, bool)
+{
+  return NULL;
+}
+
 void
 default_pe_asm_named_section (const char *name, unsigned int flags,
 			      tree decl)

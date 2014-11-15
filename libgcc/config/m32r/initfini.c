@@ -63,8 +63,7 @@ static func_ptr __DTOR_LIST__[1]
    refers to one particular associated `__DTOR_LIST__' which belongs to the
    same particular root executable or shared library file.  */
 
-static void __do_global_dtors (void)
-asm ("__do_global_dtors") __attribute__ ((used, section (".text")));
+static void __do_global_dtors (void) __attribute__ ((used, section (".text")));
 
 static void
 __do_global_dtors (void)
@@ -78,8 +77,13 @@ __do_global_dtors (void)
 /* .init section start.
    This must appear at the start of the .init section.  */
 
-asm ("\n\
-	.section .init,\"ax\",@progbits\n\
+asm ("\n"
+#ifdef __COFF__
+"	.section .init,\"ax\"\n"
+#else
+"	.section .init,\"ax\",@progbits\n"
+#endif
+"\
 	.balign 4\n\
 	.global __init\n\
 __init:\n\
@@ -95,8 +99,13 @@ __init:\n\
 /* .fini section start.
    This must appear at the start of the .init section.  */
 
-asm ("\n\
-	.section .fini,\"ax\",@progbits\n\
+asm ("\n"
+#ifdef __COFF__
+"	.section .fini,\"ax\"\n"
+#else
+"	.section .fini,\"ax\",@progbits\n"
+#endif
+"\
 	.balign 4\n\
 	.global __fini\n\
 __fini:\n\
@@ -128,8 +137,7 @@ static func_ptr __DTOR_END__[1]
 /* Run all global constructors for the program.
    Note that they are run in reverse order.  */
 
-static void __do_global_ctors (void)
-asm ("__do_global_ctors") __attribute__ ((used, section (".text")));
+static void __do_global_ctors (void) __attribute__ ((used, section (".text")));
 
 static void
 __do_global_ctors (void)
@@ -141,10 +149,18 @@ __do_global_ctors (void)
 }
 
 /* .init section end.
-   This must live at the end of the .init section.  */
+   This must live at the end of the .init section.
+   We give it a label to make disassemblies more readable.  */
 
-asm ("\n\
-	.section .init,\"ax\",@progbits\n\
+asm ("\n"
+#ifdef __COFF__
+"	.section .init,\"ax\"\n"
+#else
+"	.section .init,\"ax\",@progbits\n"
+#endif
+"\
+	.global __init_end\n\
+__init_end:\n\
 	bl __do_global_ctors\n\
 	mv sp,fp\n\
 	pop lr\n\
@@ -154,10 +170,18 @@ asm ("\n\
 ");
 
 /* .fini section end.
-   This must live at the end of the .fini section.  */
+   This must live at the end of the .fini section.
+   We give it a label to make disassemblies more readable.  */
 
-asm ("\n\
-	.section .fini,\"ax\",@progbits\n\
+asm ("\n"
+#ifdef __COFF__
+"	.section .fini,\"ax\"\n"
+#else
+"	.section .fini,\"ax\",@progbits\n"
+#endif
+"\
+	.global __fini_end\n\
+__fini_end:\n\
 	mv sp,fp\n\
 	pop lr\n\
 	pop fp\n\
